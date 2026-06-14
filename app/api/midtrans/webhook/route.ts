@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { snap } from '@/lib/midtrans';
-import { createClient } from '@supabase/supabase-js';
+
+const MidtransClient = require('midtrans-client');
+const { createClient } = require('@supabase/supabase-js');
+
+const snap = new MidtransClient.Snap({
+  isProduction: false,
+  serverKey: process.env.MIDTRANS_SERVER_KEY,
+});
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,7 +20,6 @@ export async function POST(req: NextRequest) {
     const { order_id, transaction_status, fraud_status } = notification;
 
     let status = 'pending';
-
     if (transaction_status === 'capture' && fraud_status === 'accept') {
       status = 'paid';
     } else if (transaction_status === 'settlement') {
@@ -23,13 +28,8 @@ export async function POST(req: NextRequest) {
       status = 'failed';
     }
 
-    // Update status order
-    await supabase
-      .from('orders')
-      .update({ status })
-      .eq('order_id', order_id);
+    await supabase.from('orders').update({ status }).eq('order_id', order_id);
 
-    // Kalau paid, upgrade user plan
     if (status === 'paid') {
       const { data: order } = await supabase
         .from('orders')
@@ -40,13 +40,9 @@ export async function POST(req: NextRequest) {
       if (order) {
         const expiredAt = new Date();
         expiredAt.setDate(expiredAt.getDate() + 30);
-
         await supabase
-          .from('users')
-          .update({
-            plan: order.plan,
-            expired_at: expiredAt.toISOString(),
-          })
+          .from('profiles')
+          .update({ plan: order.plan, expired_at: expiredAt.toISOString() })
           .eq('id', order.user_id);
       }
     }
