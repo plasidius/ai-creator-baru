@@ -10,33 +10,34 @@ const supabase = createClient(
 export async function POST(req: NextRequest) {
   try {
     const { user_id, email, plan, amount } = await req.json();
-    const orderId = `ORD-${Date.now()}`;
+const validEmail = email && email.includes('@') ? email : 'user@example.com';
+const orderId = `ORD-${Date.now()}`;
 
-    await supabase.from('orders').insert({
-      order_id: orderId,
-      user_id,
-      plan,
-      amount,
-      status: 'pending',
-    });
+await supabase.from('orders').insert({
+  order_id: orderId,
+  user_id,
+  plan,
+  amount,
+  status: 'pending',
+});
 
-    const transaction = await snap.createTransaction({
-      transaction_details: {
-        order_id: orderId,
-        gross_amount: amount,
-      },
-      customer_details: {
-        email,
-      },
-      item_details: [
-        {
-          id: plan,
-          price: amount,
-          quantity: 1,
-          name: `Paket ${plan}`,
-        },
-      ],
-    });
+const transaction = await snap.createTransaction({
+  transaction_details: {
+    order_id: orderId,
+    gross_amount: amount,
+  },
+  customer_details: {
+    email: validEmail,
+  },
+  item_details: [
+    {
+      id: plan,
+      price: amount,
+      quantity: 1,
+      name: `Paket ${plan}`,
+    },
+  ],
+});
 
     return NextResponse.json({
       token: transaction.token,
