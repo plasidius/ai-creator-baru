@@ -57,6 +57,7 @@ export default function VoiceToVideoPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "voicescript",
           prompt: `Kamu adalah produser konten video profesional Indonesia.
 
 Buat paket konten Voice to Video untuk:

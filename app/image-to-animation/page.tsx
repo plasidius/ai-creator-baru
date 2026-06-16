@@ -27,6 +27,7 @@ export default function ImageToAnimation() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "idea",
           prompt: `Kamu adalah spesialis animasi foto/gambar untuk konten sosial media.
 Deskripsi gambar: "${description}"
 Efek animasi yang diinginkan: ${animType}

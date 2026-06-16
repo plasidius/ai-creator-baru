@@ -127,7 +127,8 @@ export default function ContentRepurpose() {
           const res = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ prompt: p.prompt(input) }),
+            body: JSON.stringify({
+          tool: "caption", prompt: p.prompt(input) }),
           });
           const data = await res.json();
           newResults[p.id] = data.result || "Gagal generate.";

@@ -35,6 +35,7 @@ export default function HookLibrary() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "hook",
           prompt: `Kamu adalah copywriter viral Indonesia dengan track record konten 10 juta+ views.
 Buat 10 hook pembuka konten VIRAL dengan formula berbeda untuk:
 - Topik: "${topic}"

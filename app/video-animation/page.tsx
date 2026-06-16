@@ -48,6 +48,7 @@ export default function VideoAnimationPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "voicescript",
           prompt: `Kamu adalah produser video animasi profesional Indonesia.
 
 Buat paket konten AI Video Animation untuk:

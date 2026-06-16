@@ -91,6 +91,7 @@ export default function TikTokAI() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "tiktok",
           prompt: `Kamu adalah kreator konten TikTok viral Indonesia dengan 10 juta followers.
 Buat script TikTok viral untuk topik: "${prompt}"
 

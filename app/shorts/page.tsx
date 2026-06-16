@@ -76,6 +76,7 @@ export default function ShortsAI() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "shorts",
           prompt: `Buat script YouTube Shorts viral tentang: ${prompt}`,
         }),
       });

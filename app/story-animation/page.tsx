@@ -60,6 +60,7 @@ export default function StoryAnimationPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "story",
           prompt: `Kamu adalah penulis cerita animasi profesional Indonesia.
 
 Buat cerita animasi lengkap untuk:

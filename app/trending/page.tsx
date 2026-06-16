@@ -57,6 +57,7 @@ export default function TrendingPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "idea",
           prompt: `Kamu adalah pakar social media dan tren konten Indonesia yang selalu update.
 
 Temukan 8 topik konten yang sedang viral atau trending untuk:

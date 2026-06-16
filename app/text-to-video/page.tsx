@@ -29,6 +29,7 @@ export default function TextToVideo() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "voicescript",
           prompt: `Kamu adalah sutradara video AI profesional.
 Ide video: "${idea}"
 Gaya: ${style}

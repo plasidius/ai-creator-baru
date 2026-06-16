@@ -34,6 +34,7 @@ export default function ObjectionHandler() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "objection",
           prompt: `Kamu adalah sales expert Indonesia dengan closing rate 80%.
 Produk: "${product}"
 Keberatan calon pembeli: "${objText}"

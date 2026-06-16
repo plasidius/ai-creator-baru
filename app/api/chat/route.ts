@@ -102,6 +102,7 @@ export async function POST(req: NextRequest) {
       voicescript: `Kamu adalah scriptwriter podcast/voiceover Indonesia. Output HANYA berupa script narasi yang natural untuk dibaca dengan suara.`,
       objection: `Kamu adalah sales expert Indonesia. Output HANYA berupa script mengatasi keberatan/objeksi calon pembeli dengan cara yang persuasif.`,
     };
+    const systemPrompt = TOOL_SYSTEM_PROMPTS[tool] || `Kamu adalah asisten AI Indonesia yang helpful. Jawab dalam Bahasa Indonesia.`;
     const anthropicKey = process.env.ANTHROPIC_API_KEY?.trim();
     const openaiKey = process.env.OPENAI_API_KEY?.trim();
 

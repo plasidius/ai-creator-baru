@@ -30,6 +30,7 @@ export default function ReelsGenerator() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "reels",
           prompt: `Buat script Reels/TikTok viral untuk topik: "${prompt}"
 Format:
 [HOOK - 3 detik pertama yang bikin stop scroll]
@@ -53,6 +54,7 @@ Bahasa Indonesia gaul, to the point, tidak bertele-tele.`,
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "reels",
           prompt: `Berikan panduan produksi video Reels lengkap untuk script berikut dengan gaya voice "${voiceStyle}":
 
 Script: "${script}"

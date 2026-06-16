@@ -50,6 +50,7 @@ export default function FBPro() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "ads",
           prompt: `Kamu adalah ahli konten Facebook Reels viral untuk pasar Indonesia.
 
 Buat konten Facebook Reels lengkap untuk:

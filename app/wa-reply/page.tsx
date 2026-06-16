@@ -34,6 +34,7 @@ export default function WAReply() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "reply",
           prompt: `Kamu adalah CS profesional dan expert closing untuk produk: "${product}".
 Balas pesan WA untuk situasi: ${context}
 

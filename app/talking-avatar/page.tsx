@@ -26,6 +26,7 @@ export default function TalkingAvatar() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "voicescript",
           prompt: `Kamu adalah direktur produksi video avatar AI.
 Script yang akan dibacakan avatar: "${script}"
 Tipe avatar: ${avatar}

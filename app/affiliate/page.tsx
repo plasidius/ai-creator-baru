@@ -51,6 +51,7 @@ export default function AffiliatePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          tool: "affiliate",
           prompt: `Kamu adalah copywriter affiliate marketing terbaik Indonesia yang ahli bikin caption viral.
 
 Buat caption affiliate untuk:
