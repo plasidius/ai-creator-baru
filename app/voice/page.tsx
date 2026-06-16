@@ -197,17 +197,6 @@ export default function VoicePage() {
             </a>
           </div>
         )}
-
-        {/* INFO CARD */}
-        <div className="mt-8 p-6 rounded-3xl bg-cyan-500/10 border border-cyan-500/20 backdrop-blur">
-          <h3 className="text-cyan-400 font-bold mb-2">ℹ️ Cara kerja Voice AI ini</h3>
-          <ul className="text-white/60 text-sm space-y-1">
-            <li>• Menggunakan <strong className="text-white/80">Web Speech API</strong> bawaan browser — gratis, tidak butuh API key</li>
-            <li>• Otomatis pakai suara Indonesia kalau tersedia di device kamu</li>
-            <li>• Untuk kualitas studio, uncomment kode ElevenLabs di <code className="text-cyan-300">voice/page.tsx</code> dan tambah <code className="text-cyan-300">ELEVENLABS_API_KEY</code> di .env.local</li>
-          </ul>
-        </div>
-
       </div>
     </main>
   );
