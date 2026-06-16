@@ -41,6 +41,7 @@ export async function POST(req: NextRequest) {
         .select('user_id, plan')
         .eq('order_id', order_id)
         .single();
+      console.log('Order data:', order);
 
       if (order) {
         const expiredAt = new Date();
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
           .select('email, name')
           .eq('id', order.user_id)
           .single();
-
+        console.log('Profile data:', profile);
         if (profile?.email) {
           console.log('Sending email to:', profile.email);
           try {
