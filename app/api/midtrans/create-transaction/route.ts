@@ -13,14 +13,14 @@ export async function POST(req: NextRequest) {
 const validEmail = email && email.includes('@') ? email : 'user@example.com';
 const orderId = `ORD-${Date.now()}`;
 
-await supabase.from('orders').insert({
+const { data: orderData, error: orderError } = await supabase.from('orders').insert({
   order_id: orderId,
   user_id,
   plan,
   amount,
   status: 'pending',
 });
-
+console.log('Order insert result:', orderData, orderError);
 const transaction = await snap.createTransaction({
   transaction_details: {
     order_id: orderId,
