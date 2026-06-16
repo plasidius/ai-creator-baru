@@ -57,7 +57,21 @@ export async function POST(req: NextRequest) {
           .select('email, name')
           .eq('id', order.user_id)
           .single();
-
+        // Kirim email notifikasi
+        if (profile?.email) {
+          console.log('Sending email to:', profile.email); // ← tambah ini
+          try {
+            const emailResult = await resend.emails.send({
+              from: 'onboarding@resend.dev',
+              to: profile.email,
+              subject: `✅ Pembayaran Berhasil - Paket ${order.plan}`,
+              html: `...`,
+            });
+            console.log('Email result:', emailResult); // ← tambah ini
+          } catch (emailError) {
+            console.error('Email error:', emailError); // ← tambah ini
+          }
+        }
         // Kirim email notifikasi
         if (profile?.email) {
           await resend.emails.send({
