@@ -1,3 +1,5 @@
+"use client";
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from 'next/script';
@@ -12,11 +14,6 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
-
-export const metadata: Metadata = {
-  title: "AI Suite",
-  description: "Platform AI Tools",
-};
 
 export default function RootLayout({
   children,
