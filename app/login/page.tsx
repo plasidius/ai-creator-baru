@@ -1,5 +1,5 @@
 "use client";
-
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
@@ -68,6 +68,7 @@ function FloatingCard({ emoji, title, subtitle, className, style }: { emoji: str
 
 export default function LoginPage() {
   const router = useRouter();
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [mode, setMode] = useState<"login" | "register" | "forgot">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -103,7 +104,29 @@ export default function LoginPage() {
     e.preventDefault();
     resetMessages();
     if (password.length < 6) { setError("❌ Password minimal 6 karakter"); return; }
+
+    if (!executeRecaptcha) {
+      setError("❌ reCAPTCHA belum siap, coba lagi");
+      return;
+    }
+
     setLoading(true);
+
+    const token = await executeRecaptcha("register");
+
+    const verifyRes = await fetch("/api/verify-captcha", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+    const verifyData = await verifyRes.json();
+
+    if (!verifyData.success) {
+      setError("❌ Verifikasi gagal, kamu terdeteksi sebagai bot");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.auth.signUp({
       email, password,
       options: { data: { full_name: name } },
