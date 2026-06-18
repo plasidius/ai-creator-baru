@@ -35,53 +35,6 @@ async function checkUsage(userId: string, supabase: ReturnType<typeof createServ
   return { plan, limit, usageCount };
 }
 
-export async function POST(req: NextRequest) {
-  try {
-    const { prompt, tool } = await req.json();
-    if (!prompt) {
-      return NextResponse.json({ error: "Prompt wajib diisi" }, { status: 400 });
-    }
-
-    // ===== CEK AUTH & USAGE LIMIT =====
-    const cookieStore = await cookies();
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() { return cookieStore.getAll(); },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          },
-        },
-      }
-    );
-
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (user) {
-      const { plan, limit, usageCount } = await checkUsage(user.id, supabase);
-
-      if (usageCount >= limit) {
-        return NextResponse.json({
-          error: `❌ Limit harian tercapai (${usageCount}/${limit}). <a href="/pricing">Upgrade ke Pro</a> untuk lebih banyak generate!`,
-          limitReached: true,
-          plan,
-          used: usageCount,
-          limit,
-        }, { status: 429 });
-      }
-
-      // Increment usage
-      await supabase
-        .from("profiles")
-        .update({ usage_count: usageCount + 1 })
-        .eq("id", user.id);
-    }
-
-    // ===== ANTHROPIC =====
 const TOOL_SYSTEM_PROMPTS: Record<string, string> = {
 
   tiktok: `ROLE
@@ -806,7 +759,56 @@ QUALITY CHECKLIST
 - Apakah solusi yang diberikan masuk akal?
 - Apakah tidak terdengar memaksa/defensif?`,
 };
+
+export async function POST(req: NextRequest) {
+  try {
+    const { prompt, tool } = await req.json();
+    if (!prompt) {
+      return NextResponse.json({ error: "Prompt wajib diisi" }, { status: 400 });
+    }
+
+    // ===== CEK AUTH & USAGE LIMIT =====
+    const cookieStore = await cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return cookieStore.getAll(); },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+      const { plan, limit, usageCount } = await checkUsage(user.id, supabase);
+
+      if (usageCount >= limit) {
+        return NextResponse.json({
+          error: `❌ Limit harian tercapai (${usageCount}/${limit}). <a href="/pricing">Upgrade ke Pro</a> untuk lebih banyak generate!`,
+          limitReached: true,
+          plan,
+          used: usageCount,
+          limit,
+        }, { status: 429 });
+      }
+
+      // Increment usage
+      await supabase
+        .from("profiles")
+        .update({ usage_count: usageCount + 1 })
+        .eq("id", user.id);
+    }
+
+    // ===== PILIH SYSTEM PROMPT SESUAI TOOL =====
     const systemPrompt = TOOL_SYSTEM_PROMPTS[tool] || `Kamu adalah asisten AI Indonesia yang helpful. Jawab dalam Bahasa Indonesia.`;
+
     const anthropicKey = process.env.ANTHROPIC_API_KEY?.trim();
     const openaiKey = process.env.OPENAI_API_KEY?.trim();
 
