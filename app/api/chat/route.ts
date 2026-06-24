@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { ratelimit } from "@/lib/ratelimit";
 
 const PLAN_LIMITS: Record<string, number> = {
   free: 10,
@@ -762,6 +763,16 @@ QUALITY CHECKLIST
 
 export async function POST(req: NextRequest) {
   try {
+    // ===== RATE LIMITING =====
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { error: "❌ Terlalu banyak permintaan. Coba lagi sebentar.", limit, remaining, reset },
+        { status: 429 }
+      );
+    }
+
     const { prompt, tool } = await req.json();
     if (!prompt) {
       return NextResponse.json({ error: "Prompt wajib diisi" }, { status: 400 });

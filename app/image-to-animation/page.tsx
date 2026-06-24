@@ -18,6 +18,7 @@ export default function ImageToAnimation() {
   const [plan, setPlan] = useState("free");
   const [checkingPlan, setCheckingPlan] = useState(true);
   const [animType, setAnimType] = useState("parallax");
+  const [description, setDescription] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
@@ -98,6 +99,7 @@ export default function ImageToAnimation() {
         body: JSON.stringify({
           imageBase64: base64,
           animType,
+          description,
         }),
       });
 
@@ -121,6 +123,7 @@ export default function ImageToAnimation() {
     setImagePreview("");
     setVideoUrl("");
     setError("");
+    setDescription("");
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -239,6 +242,22 @@ export default function ImageToAnimation() {
                   </label>
                 </div>
               )}
+            </div>
+
+            {/* DESKRIPSI GAMBAR (OPSIONAL) */}
+            <div className="p-6 rounded-3xl bg-white/5 border border-white/10">
+              <label className="text-white/60 text-sm mb-2 block">
+                Deskripsi Gambar Kamu <span className="text-white/30">(opsional)</span>
+              </label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Contoh: Foto produk skincare dengan background putih bersih, ada bunga di samping produk..."
+                className="w-full h-24 bg-black/40 border border-white/10 rounded-2xl p-4 outline-none resize-none text-white placeholder:text-white/30 text-sm"
+              />
+              <p className="text-white/30 text-xs mt-2">
+                💡 Deskripsi membantu AI memahami konteks gambar untuk hasil animasi yang lebih sesuai
+              </p>
             </div>
 
             {/* ANIMATION TYPE */}

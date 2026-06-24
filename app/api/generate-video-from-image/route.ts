@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ratelimit } from "@/lib/ratelimit";
 
 const Replicate = require("replicate");
 
@@ -8,6 +9,15 @@ const replicate = new Replicate({
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { error: "❌ Terlalu banyak permintaan. Coba lagi sebentar.", limit, remaining, reset },
+        { status: 429 }
+      );
+    }
+
     const { imageBase64, animType } = await req.json();
 
     if (!imageBase64) {

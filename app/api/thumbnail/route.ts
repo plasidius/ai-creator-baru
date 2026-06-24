@@ -1,4 +1,6 @@
 import Replicate from "replicate";
+import { NextResponse } from "next/server";
+import { ratelimit } from "@/lib/ratelimit";
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -6,6 +8,15 @@ const replicate = new Replicate({
 
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { error: "❌ Terlalu banyak permintaan. Coba lagi sebentar.", limit, remaining, reset },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     console.log("THUMBNAIL REQUEST:", body);
 
