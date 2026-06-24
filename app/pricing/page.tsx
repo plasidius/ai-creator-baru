@@ -46,7 +46,7 @@ const PLANS = [
     border: "border-yellow-500/30",
     badge: "⚡ Best Value",
     features: [
-      "Unlimited generate",
+      "500 generate",
       "Semua 18 tools",
       "Priority response AI",
       "Copy & export hasil",
