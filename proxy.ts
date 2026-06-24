@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function proxy(req: NextRequest) {
+export function middleware(req: NextRequest) {
   const adminEmail = process.env.ADMIN_EMAIL;
   const userEmail = req.cookies.get('admin_email')?.value;
 
@@ -9,7 +9,7 @@ export function proxy(req: NextRequest) {
     req.nextUrl.pathname.startsWith('/admin') &&
     !req.nextUrl.pathname.startsWith('/admin/login')
   ) {
-    if (userEmail !== adminEmail) {
+    if (!userEmail || userEmail !== adminEmail) {
       return NextResponse.redirect(new URL('/admin/login', req.url));
     }
   }
