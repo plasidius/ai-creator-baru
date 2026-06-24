@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { ratelimit } from "@/lib/ratelimit";
 
 // ✅ VIDEO API ROUTE — pakai Picsum (gratis, tidak butuh API key)
 // Pollinations sudah 402 (berbayar) dari Indonesia (IP CGK)
@@ -10,6 +11,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anonymous";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+    if (!success) {
+      return NextResponse.json(
+        { error: "❌ Terlalu banyak permintaan. Coba lagi sebentar.", limit, remaining, reset },
+        { status: 429 }
+      );
+    }
+
     const { prompt } = await req.json();
 
     if (!prompt) {
