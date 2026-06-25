@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactElement } from "react";
 import {
   AreaChart,
   Area,
@@ -56,7 +56,7 @@ const NAV_ITEMS = [
 ];
 
 function Icon({ name, className }: { name: string; className?: string }) {
-  const paths: Record<string, JSX.Element> = {
+  const paths: Record<string, ReactElement> = {
     "layout-grid": (
       <>
         <rect x="3" y="3" width="7" height="7" rx="1.5" />
