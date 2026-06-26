@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { ratelimit } from "@/lib/ratelimit";
+import { validateInput, validateOutput } from "@/lib/validators";
 
 const PLAN_LIMITS: Record<string, number> = {
   free: 10,
@@ -773,10 +774,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { prompt, tool } = await req.json();
-    if (!prompt) {
-      return NextResponse.json({ error: "Prompt wajib diisi" }, { status: 400 });
+    const { prompt: rawPrompt, tool } = await req.json();
+
+    // ===== INPUT VALIDATOR =====
+    const inputCheck = validateInput(rawPrompt);
+    if (!inputCheck.valid) {
+      return NextResponse.json({ error: inputCheck.error }, { status: 400 });
     }
+    const prompt = inputCheck.sanitized;
 
     // ===== CEK AUTH & USAGE LIMIT =====
     const cookieStore = await cookies();
@@ -847,7 +852,14 @@ export async function POST(req: NextRequest) {
         if (res.ok) {
           const data = await res.json();
           const result = data?.content?.[0]?.text;
-          if (result) return NextResponse.json({ result });
+          if (result) {
+            const outputCheck = validateOutput(result, systemPrompt);
+            if (outputCheck.valid) {
+              return NextResponse.json({ result: outputCheck.sanitized });
+            }
+            console.warn("[chat] Output validator rejected Anthropic response:", outputCheck.error);
+            // fallback ke OpenAI kalau output Anthropic tidak lolos validasi
+          }
         }
 
         const errData = await res.json().catch(() => ({}));
@@ -882,7 +894,14 @@ export async function POST(req: NextRequest) {
         if (res.ok) {
           const data = await res.json();
           const result = data?.choices?.[0]?.message?.content;
-          if (result) return NextResponse.json({ result });
+          if (result) {
+            const outputCheck = validateOutput(result, systemPrompt);
+            if (outputCheck.valid) {
+              return NextResponse.json({ result: outputCheck.sanitized });
+            }
+            console.warn("[chat] Output validator rejected OpenAI response:", outputCheck.error);
+            return NextResponse.json({ error: outputCheck.error }, { status: 500 });
+          }
         }
 
         const errData = await res.json().catch(() => ({}));
