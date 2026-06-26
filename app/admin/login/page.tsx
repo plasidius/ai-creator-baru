@@ -9,16 +9,25 @@ export default function AdminLogin() {
   const router = useRouter();
 
   const handleLogin = async () => {
-    const res = await fetch('/api/admin/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-    });
+    setError('');
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (res.ok) {
-      router.push('/admin');
-    } else {
-      setError('Email atau password salah!');
+      const data = await res.json().catch(() => ({}));
+
+      if (res.ok) {
+        router.push('/admin');
+      } else if (res.status === 429) {
+        setError(data.error || 'Terlalu banyak percobaan login. Coba lagi nanti.');
+      } else {
+        setError('Email atau password salah!');
+      }
+    } catch {
+      setError('Gagal terhubung ke server. Coba lagi.');
     }
   };
 
