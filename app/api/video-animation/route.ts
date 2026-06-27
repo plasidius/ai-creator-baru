@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+import Replicate from "replicate";
 import { ratelimit } from "@/lib/ratelimit";
 
-// ✅ VIDEO API ROUTE — pakai Picsum (gratis, tidak butuh API key)
-// Pollinations sudah 402 (berbayar) dari Indonesia (IP CGK)
-//
-// Upgrade ke video beneran:
-// - Replicate: https://replicate.com (free credit $5)
-// - RunwayML: https://runwayml.com
-// - Luma AI: https://lumalabs.ai
+// ✅ SMART VIDEO ANIMATION ROUTE
+// - Kalau ada REPLICATE_API_TOKEN → generate video AI beneran
+// - Kalau gagal/tidak ada → fallback ke Picsum preview
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,16 +26,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Seed unik dari timestamp — gambar selalu berbeda setiap request
-    const seed = Date.now() + Math.floor(Math.random() * 9999999);
+    // Kalau ada token Replicate → generate video AI beneran
+    if (process.env.REPLICATE_API_TOKEN) {
+      try {
+        const replicate = new Replicate({
+          auth: process.env.REPLICATE_API_TOKEN,
+        });
 
-    // Picsum: gratis, reliable, tidak diblokir dari Indonesia
+        const output = await replicate.run("minimax/video-01", {
+          input: {
+            prompt,
+            prompt_optimizer: true,
+          },
+        });
+
+        const videoUrl =
+          typeof output === "string"
+            ? output
+            : Array.isArray(output)
+            ? output[0]
+            : (output as any)?.url ?? null;
+
+        if (videoUrl) {
+          return NextResponse.json({ videoUrl, type: "ai_video" });
+        }
+      } catch (replicateErr: any) {
+        console.error("Replicate gagal, fallback ke preview:", replicateErr?.message);
+        // Lanjut ke fallback di bawah
+      }
+    }
+
+    // Fallback: Picsum preview (selalu jalan, gratis)
+    const seed = Date.now() + Math.floor(Math.random() * 9999999);
     const imageUrl = `https://picsum.photos/seed/${seed}/1280/720`;
 
     return NextResponse.json({
       videoUrl: imageUrl,
       type: "image_preview",
-      message: "Preview visual — upgrade ke Replicate untuk video beneran",
+      message: "Preview visual — video AI sedang tidak tersedia, coba lagi nanti",
     });
 
   } catch (err) {
