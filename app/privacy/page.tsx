@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         </a>
 
         <h1 className="text-3xl md:text-4xl font-black mb-2">Kebijakan Privasi</h1>
-        <p className="text-white/40 text-sm mb-10">Terakhir diperbarui: 17 Juni 2026</p>
+        <p className="text-white/40 text-sm mb-10">Terakhir diperbarui: 27 Juni 2026</p>
 
         <div className="space-y-8 text-white/70 leading-relaxed">
           <section>
@@ -77,7 +77,18 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-white mb-3">6. Hak Pengguna</h2>
+            <h2 className="text-xl font-bold text-white mb-3">6. Transfer Data Lintas Negara</h2>
+            <p>
+              Sebagian penyedia layanan pihak ketiga yang kami gunakan (seperti Anthropic, OpenAI,
+              dan Replicate untuk pemrosesan AI) memproses data di server yang berlokasi di luar
+              Indonesia. Dengan menggunakan Layanan, Anda menyetujui transfer data tersebut sesuai
+              ketentuan dalam Undang-Undang Pelindungan Data Pribadi (UU PDP) yang berlaku, dan kami
+              berupaya memastikan mitra kami menerapkan standar keamanan data yang memadai.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-bold text-white mb-3">7. Hak Pengguna</h2>
             <p>Anda memiliki hak untuk:</p>
             <ul className="list-disc pl-6 mt-2 space-y-1">
               <li>Mengakses dan memperbarui informasi akun Anda</li>
@@ -87,7 +98,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-white mb-3">7. Cookie</h2>
+            <h2 className="text-xl font-bold text-white mb-3">8. Cookie</h2>
             <p>
               Kami menggunakan cookie untuk menjaga sesi login Anda dan meningkatkan pengalaman
               penggunaan platform. Anda dapat menonaktifkan cookie melalui pengaturan browser,
@@ -96,7 +107,7 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-white mb-3">8. Perubahan Kebijakan</h2>
+            <h2 className="text-xl font-bold text-white mb-3">9. Perubahan Kebijakan</h2>
             <p>
               Kami dapat memperbarui Kebijakan Privasi ini dari waktu ke waktu. Perubahan akan
               diinformasikan melalui platform atau email.
@@ -104,10 +115,13 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-xl font-bold text-white mb-3">9. Kontak</h2>
+            <h2 className="text-xl font-bold text-white mb-3">10. Kontak</h2>
             <p>
               Jika Anda memiliki pertanyaan mengenai Kebijakan Privasi ini, silakan hubungi kami
-              melalui email yang tercantum di halaman dukungan platform.
+              melalui email{" "}
+              <a href="mailto:plasidius7@gmail.com" className="text-fuchsia-400 hover:underline">
+                plasidius7@gmail.com
+              </a>.
             </p>
           </section>
         </div>
