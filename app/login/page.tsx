@@ -346,6 +346,20 @@ export default function LoginPage() {
                   </div>
                 )}
 
+                {mode === "register" && (
+                  <p className="text-xs text-white/40 text-center -mt-1">
+                    Dengan mendaftar, kamu menyetujui{" "}
+                    <a href="/terms" target="_blank" className="text-fuchsia-400 hover:underline">
+                      Syarat & Ketentuan
+                    </a>{" "}
+                    dan{" "}
+                    <a href="/privacy" target="_blank" className="text-fuchsia-400 hover:underline">
+                      Kebijakan Privasi
+                    </a>{" "}
+                    kami.
+                  </p>
+                )}
+
                 <button type="submit" disabled={loading}
                   className="w-full py-4 rounded-2xl font-black text-base bg-gradient-to-r from-fuchsia-500 via-violet-500 to-blue-500 hover:opacity-90 shadow-xl shadow-fuchsia-500/30 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all mt-2">
                   {loading ? (
