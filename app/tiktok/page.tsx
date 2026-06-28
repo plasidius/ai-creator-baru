@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import RatingWidget from "@/components/RatingWidget";
 
 export default function TikTokAI() {
   const [prompt, setPrompt] = useState("");
@@ -200,6 +201,9 @@ Bahasa: Indonesia gaul Gen Z, tidak formal, natural seperti ngobrol biasa.`,
                 </button>
               </div>
               <pre className="whitespace-pre-wrap text-white/80 leading-relaxed text-sm">{script}</pre>
+              <div className="mt-4">
+                <RatingWidget toolId="tiktok" />
+              </div>
             </div>
           )}
 
